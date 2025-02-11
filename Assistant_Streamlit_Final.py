@@ -90,13 +90,7 @@ if user_input:
 
     # Retrieve and display the legal response.
     with st.chat_message("assistant"):
-        if st.session_state['new_conversation_flag'] == 0:
-            initial_message = [{"role": "user", "content": instruction_prompt}]
-            combined_conversations = initial_message + st.session_state['conversation']
-            st.session_state['new_conversation_flag'] = 1
-        else:
-            combined_conversations = st.session_state['conversation']
-        response = get_legal_response(combined_conversations)
+        response = get_legal_response(st.session_state['conversation'])
         st.markdown(f"**Assistant:** {response}", unsafe_allow_html=True)
 
     # Append the assistant's reply to the conversation history.
