@@ -7,6 +7,7 @@ instruction_prompt = '''
                    - **Third Column:** Provide three bullet points explaining requirements, permissions, and prohibitions in clear language.
                 3. Double-check the format to ensure it meets these specifications.
                 4. Ensure the language is simple, precise, and free of complex terminology.
+                5. Ensure that Markdown is properly formatted.
 
                 **Table Format Example:**
 

@@ -19,20 +19,29 @@ if 'conversation' not in st.session_state:
     # This list will hold the conversation messages.
     st.session_state['conversation'] = []
 
-New_Conversation = 0
+if 'new_conversation_flag' not in st.session_state:
+    st.session_state['new_conversation_flag'] = 0
+
 # =============================================================================
 # SIDEBAR CONTROLS
 # =============================================================================
 st.sidebar.title('Legal Assistant Options')
 
+# Button to start a new conversation
+if st.sidebar.button("New Conversation"):
+    st.session_state['conversation'] = []  # Clear conversation history
+    st.session_state['new_conversation_flag'] = 0  # Reset flag
+
 # -----------------------------------------------------------------------------
 # PAGE TITLE
 # -----------------------------------------------------------------------------
 st.title("Legal Response Chatbot")
+
 # Display all previous conversation messages in order (rendered as Markdown)
 for msg in st.session_state['conversation']:
     with st.chat_message(msg['role']):
         st.markdown(msg['content'])
+
 # -----------------------------------------------------------------------------
 # HELPER FUNCTION: get_legal_response
 # -----------------------------------------------------------------------------
@@ -81,14 +90,14 @@ if user_input:
 
     # Retrieve and display the legal response.
     with st.chat_message("assistant"):
-        if New_Conversation == 0:
+        if st.session_state['new_conversation_flag'] == 0:
             initial_message = [{"role": "user", "content": instruction_prompt}]
             combined_conversations = initial_message + st.session_state['conversation']
-            New_Conversation = 1
+            st.session_state['new_conversation_flag'] = 1
         else:
             combined_conversations = st.session_state['conversation']
         response = get_legal_response(combined_conversations)
-        st.markdown(f"**Assistant:** {response}")
+        st.markdown(f"**Assistant:** {response}", unsafe_allow_html=True)
 
     # Append the assistant's reply to the conversation history.
     st.session_state['conversation'].append({"role": "assistant", "content": response})
