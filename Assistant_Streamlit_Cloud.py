@@ -1,8 +1,7 @@
-import os
+import io
 import streamlit as st
 from openai import OpenAI
-from src.prompts import *
-from test import combined_conversations
+from prompts.prompts import *
 
 # -----------------------------------------------------------------------------
 # INITIAL SETUP: Initialize the OpenAI client and conversation history in session state
@@ -93,3 +92,39 @@ if user_input:
 
     # Append the assistant's reply to the conversation history.
     st.session_state['conversation'].append({"role": "assistant", "content": response})
+
+# -----------------------------------------------------------------------------
+# DOWNLOAD OPTION: Allow users to download the conversation history
+# -----------------------------------------------------------------------------
+if st.session_state['conversation']:
+    # Create a simple text transcript of the conversation.
+    conversation_text = ""
+    for msg in st.session_state['conversation']:
+        conversation_text += f"{msg['role'].capitalize()}: {msg['content']}\n\n"
+
+    # Create an in-memory binary buffer
+    buffer = io.BytesIO()
+
+    client = OpenAI()
+    completion = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "developer", "content": markdown_to_csv_prompt},
+            {
+                "role": "user",
+                "content": st.session_state['conversation'][-1]['content'],
+            }
+        ]
+    )
+
+    # Write the API response to the buffer as bytes
+    # (Assuming completion.choices[0].message.content returns a string)
+    buffer.write(completion.choices[0].message.content.encode("utf-8"))
+    buffer.seek(0)  # Rewind the buffer so it can be read from the beginning
+
+    st.download_button(
+        label="Download Conversation",
+        data=buffer,
+        file_name="Output_Table.csv",  # Updated file extension to CSV
+        mime="text/csv"  # Updated MIME type for CSV files
+    )

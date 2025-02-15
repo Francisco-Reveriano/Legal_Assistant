@@ -102,3 +102,19 @@ Your task is to extract and format regulatory information into a structured Mark
 Question: {question}
 '''
     return instruction_prompt
+
+
+markdown_to_csv_prompt = '''
+### Instruction ###
+Extract the table from the input text and convert it into CSV format.
+
+- Ensure that all table contents are fully extracted.
+- From the column **"Detailed Breakdown (Requirements, Permissions, Prohibitions)"**, split its contents into three separate columns: **"Requirements"**, **"Permissions"**, and **"Prohibitions"**.
+- Double-check the format to ensure correctness.
+- Output **only** the CSV data, with no additional text or explanations.
+- Final headers should be: Business Requirements (Exact Legal Text), Simplified Interpretation (Plain English), Requirements, Permissions, Prohibitions.
+- If there is no table reply "NO_TABLE"
+
+Ensure proper formatting for CSV conversion.
+
+'''
