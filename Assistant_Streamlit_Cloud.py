@@ -1,6 +1,8 @@
 import io
+from io import StringIO
 import streamlit as st
 from openai import OpenAI
+import pandas as pd
 from prompts.prompts import *
 
 # -----------------------------------------------------------------------------
@@ -117,14 +119,21 @@ if st.session_state['conversation']:
         ]
     )
 
-    # Write the API response to the buffer as bytes
-    # (Assuming completion.choices[0].message.content returns a string)
-    buffer.write(completion.choices[0].message.content.encode("utf-8"))
-    buffer.seek(0)  # Rewind the buffer so it can be read from the beginning
+    StringData = StringIO(completion.choices[0].message.content)
+    df = pd.read_csv(StringData, sep=",")
 
+    # Save DataFrame to an Excel file in memory
+    with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
+        df.to_excel(writer, index=False, sheet_name='Sheet1')
+        writer.close()
+
+    # Set the buffer position to the beginning
+    buffer.seek(0)
+
+    # Streamlit download button
     st.download_button(
-        label="Download Conversation",
+        label="Download Table",
         data=buffer,
-        file_name="Output_Table.csv",  # Updated file extension to CSV
-        mime="text/csv"  # Updated MIME type for CSV files
+        file_name="Output_Table.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
