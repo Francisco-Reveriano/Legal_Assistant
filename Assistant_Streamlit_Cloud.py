@@ -22,7 +22,7 @@ if 'new_conversation_flag' not in st.session_state:
 # =============================================================================
 # SIDEBAR CONTROLS
 # =============================================================================
-st.sidebar.title('Legal Assistant Options')
+st.sidebar.title('LRR Chatbot Options')
 
 # Button to start a new conversation
 if st.sidebar.button("New Conversation"):
@@ -32,7 +32,7 @@ if st.sidebar.button("New Conversation"):
 # -----------------------------------------------------------------------------
 # PAGE TITLE
 # -----------------------------------------------------------------------------
-st.title("Legal Response Chatbot")
+st.title("LRR Chatbot")
 
 # Display all previous conversation messages in order (rendered as Markdown)
 for msg in st.session_state['conversation']:
@@ -109,7 +109,7 @@ if st.session_state['conversation']:
 
     client = OpenAI()
     completion = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="gpt-4o",
         messages=[
             {"role": "developer", "content": markdown_to_csv_prompt},
             {
