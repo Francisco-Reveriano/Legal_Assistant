@@ -114,7 +114,8 @@ Extract the table from the input text and convert it into CSV format.
 - Output **only** the CSV data, with no additional text or explanations.
 - Final headers should be: Business Requirements (Exact Legal Text), Simplified Interpretation (Plain English), Requirements, Permissions, Prohibitions.
 - If there is no table reply "NO_TABLE"
-- Use "," as the delimiter.
+- Use "," as the delimiter
+- Double-check that the delimiter is correct
 
 Ensure proper formatting for CSV conversion.
 
